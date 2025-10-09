@@ -1,10 +1,11 @@
 {
   "mappings": [
-    "/content/aem-boilerplate/:/",
-    "/content/aem-boilerplate/configuration:/.helix/config.json",
-    "/content/aem-boilerplate/metadata:/metadata.json"
+    "/content/idfc-edge/:/",
+    "/content/idfc-edge/configuration:/.helix/config.json",
+    "/content/idfc-edge/metadata:/metadata.json"
   ],
   "includes": [
-    "/content/aem-boilerplate/"
+    "/content/idfc-edge/",
+    "/content/dam/idfc-edge/"
   ]
 }
