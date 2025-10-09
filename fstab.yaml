@@ -1,0 +1,5 @@
+mountpoints:
+  /:
+    url: "https://weretail-global-dev.adobecqms.net/bin/franklin.delivery/helms-charity/ams-xwalk/main"
+    type: "markup"
+    suffix: ".html"
