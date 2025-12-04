@@ -1,6 +1,8 @@
 import {
   loadHeader,
   loadFooter,
+  buildBlock,
+  decorateBlock,
   decorateButtons,
   decorateIcons,
   decorateLinkedPictures,
@@ -45,6 +47,40 @@ export function moveInstrumentation(from, to) {
       .map(({ nodeName }) => nodeName)
       .filter((attr) => attr.startsWith('data-aue-') || attr.startsWith('data-richtext-')),
   );
+}
+
+/**
+ * check if link text is same as the href
+ * @param {Element} link the link element
+ * @returns {boolean} true or false
+ */
+export function linkTextIncludesHref(link) {
+  const href = link.getAttribute('href');
+  const textcontent = link.textContent;
+
+  return textcontent.includes(href);
+}
+
+/**
+   * Builds fragment blocks from links to fragments
+   * @param {Element} main The container element
+   */
+export function buildFragmentBlocks(main) {
+  main.querySelectorAll('a[href]').forEach((a) => {
+    const url = new URL(a.href);
+    if (linkTextIncludesHref(a) && url.pathname.includes('/fragments/')) {
+      const block = buildBlock('fragment', url.pathname);
+      const parent = a.parentElement;
+      a.replaceWith(block);
+      decorateBlock(block);
+      if (parent.tagName === 'P' && parent.querySelector('.block')) {
+        const div = document.createElement('div');
+        div.className = parent.className;
+        while (parent.firstChild) div.appendChild(parent.firstChild);
+        parent.replaceWith(div);
+      }
+    }
+  });
 }
 
 /**
@@ -99,6 +135,7 @@ export function decorateMain(main) {
   decorateIcons(main);
   decorateLinkedPictures(main);
   buildAutoBlocks(main);
+  buildFragmentBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
   a11yLinks(main);
