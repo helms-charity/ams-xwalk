@@ -29,7 +29,7 @@ export function moveAttributes(from, to, attributes) {
     const value = from.getAttribute(attr);
     if (value) {
       to?.setAttribute(attr, value); // optional chaining for accordion block
-      from?.removeAttribute(attr); // optional chaining for accordion block
+      from.removeAttribute(attr); // optional chaining for accordion block
     }
   });
 }
