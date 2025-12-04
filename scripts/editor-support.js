@@ -1,4 +1,4 @@
-import { showSlide } from '../blocks/carousel/carousel.js';
+// import { showSlide } from '../blocks/carousel/carousel.js';
 import {
   decorateBlock,
   decorateBlocks,
@@ -19,6 +19,7 @@ import { decorateMain } from './scripts.js';
  * Use this function to trigger a mutation for the UI editor overlay when you
  * have a scrollable block
  */
+/*
 function createMutation(block) {
   block.setAttribute('xwalk-scroll-mutation', 'true');
   block.querySelector('.carousel-slides').onscrollend = () => {
@@ -50,6 +51,7 @@ function setState(block, state) {
     showSlide(block, state);
   }
 }
+*/
 
 async function applyChanges(event) {
   // redecorate default content and blocks on patches (in the properties rail)
@@ -91,7 +93,7 @@ async function applyChanges(event) {
       const blockResource = block.getAttribute('data-aue-resource');
       const newBlock = parsedUpdate.querySelector(`[data-aue-resource="${blockResource}"]`);
       if (newBlock) {
-        const state = getState(block);
+      //  const state = getState(block);
         newBlock.style.display = 'none';
         block.insertAdjacentElement('afterend', newBlock);
         decorateButtons(newBlock);
@@ -100,7 +102,7 @@ async function applyChanges(event) {
         decorateRichtext(newBlock);
         await loadBlock(newBlock);
         block.remove();
-        setState(newBlock, state);
+      //  setState(newBlock, state);
         newBlock.style.display = null;
         return true;
       }
@@ -151,3 +153,11 @@ function attachEventListners(main) {
 }
 
 attachEventListners(document.querySelector('main'));
+
+// decorate rich text
+// this has to happen after decorateMain(), and everythime decorateBlocks() is called
+decorateRichtext();
+// in cases where the block decoration is not done in one synchronous iteration we need to listen
+// for new richtext-instrumented elements. this happens for example when using experimentation.
+const observer = new MutationObserver(() => decorateRichtext());
+observer.observe(document, { attributeFilter: ['data-richtext-prop'], subtree: true });
