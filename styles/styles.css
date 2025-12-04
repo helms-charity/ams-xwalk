@@ -167,8 +167,8 @@ a:hover {
 }
 
 /* buttons */
-a.button:any-link,
-button {
+a.button.primary,
+button.primary {
   box-sizing: border-box;
   display: inline-block;
   max-width: 100%;
@@ -190,10 +190,11 @@ button {
   white-space: nowrap;
 }
 
-a.button:hover,
-a.button:focus,
-button:hover,
-button:focus {
+a.button.primary:hover,
+a.button.primary:focus,
+button.primary:hover,
+button.primary:focus,
+button.primary:focus {
   background-color: var(--link-hover-color);
   cursor: pointer;
 }
@@ -243,12 +244,6 @@ main > .section:first-of-type {
   margin-top: 0;
 }
 
-@media (width >= 900px) {
-  main > .section > div {
-    padding: 0 32px;
-  }
-}
-
 /* section metadata */
 main .section.light,
 main .section.highlight {
@@ -259,4 +254,10 @@ main .section.highlight {
 
 .section.hidden {
   display: none;
+}
+
+@media (width >= 900px) {
+  main > .section > div {
+    padding: 0 32px;
+  }
 }

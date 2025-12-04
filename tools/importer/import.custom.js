@@ -35,6 +35,16 @@ export const customParsers = {};
 export const customElements = [];
 
 /**
- * Custom transformers
+  * An array of transformer functions.
+ *
+ * eg.
+ * [
+ *   (hookName, element, payload) => {
+ *     // transform the element
+ *   },
+ * ]
+ *
+ * The hookName is the name of the hook that the transformer is being applied to.
+ *   (eg. 'beforeTransform', 'beforeParse', 'afterParse', 'afterTransform')
  */
-export const customTransformers = {};
+export const customTransformers = [];
