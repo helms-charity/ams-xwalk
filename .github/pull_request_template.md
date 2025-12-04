@@ -1,7 +1,28 @@
-Please always provide the [GitHub issue(s)](../issues) your PR is for, as well as test URLs where your change can be observed (before and after):
+<!-- Please always provide the [GitHub issue(s)](../issues) your PR is for, as well as test URLs where your change can be observed (before and after): -->
+<!-- Feel free to delete options that are not relevant to your PR. -->
 
-Fix #<gh-issue-id>
+## Issue
 
-Test URLs:
-- Before: https://main--{repo}--{owner}.aem.live/
-- After: https://<branch>--{repo}--{owner}.aem.live/
+Fixes #IssueID
+
+## Description of what the PR is changing, including screenshots for clarity if needed.
+
+**New**
+
+- 
+
+**Changed**
+
+- 
+
+**Removed**
+
+- 
+
+
+## Test URLs and instructions -- There can be more than 1 set
+
+> If applicable, also describe how the PR reviewer can verify your expected changes, including anything that should NOT change.
+
+- Before: https://main--ams-xwalk--helms-charity.aem.page/
+- After: https://BranchName--ams-xwalk--helms-charity.aem.page/

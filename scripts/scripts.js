@@ -26,8 +26,8 @@ export function moveAttributes(from, to, attributes) {
   attributes.forEach((attr) => {
     const value = from.getAttribute(attr);
     if (value) {
-      to.setAttribute(attr, value);
-      from.removeAttribute(attr);
+      to?.setAttribute(attr, value); // optional chaining for accordion block
+      from?.removeAttribute(attr); // optional chaining for accordion block
     }
   });
 }
@@ -73,6 +73,22 @@ function buildAutoBlocks() {
 }
 
 /**
+ * Adds accessible aria-label to linked icons that don't have a text content.
+ * @param {Element} main The main element
+ */
+function a11yLinks(main) {
+  const links = main.querySelectorAll('a');
+  links.forEach((link) => {
+    let label = link.textContent;
+    if (!label && link.querySelector('span.icon')) {
+      const icon = link.querySelector('span.icon');
+      label = icon ? icon.classList[1]?.split('-')[1] : label;
+    }
+    link.setAttribute('aria-label', label);
+  });
+}
+
+/**
  * Decorates the main element.
  * @param {Element} main The main element
  */
@@ -85,6 +101,7 @@ export function decorateMain(main) {
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);
+  a11yLinks(main);
 }
 
 /**

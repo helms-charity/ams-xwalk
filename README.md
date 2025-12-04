@@ -1,10 +1,10 @@
 # Your Project's Title...
-Your project's description...
+My intent for this project is to have a place for my favorite, working features on AMS 6.5.and LTS for Edge Delivery Services.
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
-- Block Library: https://main--{repo}--{owner}.aem.page/tools/sidekick/library.html?plugin=blocks
+- Preview: https://main--ams-xwalk--helms-charity.aem.page/
+- Live: https://main--ams-xwalk--helms-charity.aem.live/
+- Block Library: https://main--ams-xwalk--helms-charity.aem.page/tools/sidekick/library.html?plugin=blocks
 
 ## Documentation
 
@@ -20,7 +20,7 @@ Furthremore, we encourage you to watch the recordings of any of our previous pre
 ## Prerequisites
 
 - nodejs 18.3.x or newer
-- AEM Cloud Service release 2024.8 or newer (>= `17465`)
+- AEM 6.5.22+ 
 
 ## Installation
 
@@ -41,3 +41,8 @@ npm run lint
 1. Install the [AEM CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 1. Start AEM Proxy: `aem up` (opens your browser at `http://localhost:3000`)
 1. Open the `{repo}` directory in your favorite IDE and start coding :)
+
+## Fixes from the boilerplates
+
+1. _tabs.json fixes UE missing tabName by defining the component
+1. scripts.js moveInstrumentation adds optional chaining to fix accordion block in UE
