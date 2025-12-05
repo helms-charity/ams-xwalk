@@ -1,11 +1,12 @@
 {
   "mappings": [
-    "/content/idfc-edge/:/",
-    "/content/idfc-edge/configuration:/.helix/config.json",
-    "/content/idfc-edge/metadata:/metadata.json"
+    "/content/ams-xwalk/:/",
+    "/content/ams-xwalk/configuration:/.helix/config.json",
+    "/content/ams-xwalk/metadata:/metadata.json",
+    "/content/dam/ams-xwalk/icons:/icons"
   ],
   "includes": [
-    "/content/idfc-edge/",
-    "/content/dam/idfc-edge/"
+    "/content/ams-xwalk/",
+    "/content/dam/ams-xwalk/icons"
   ]
 }
