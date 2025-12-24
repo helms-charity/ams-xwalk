@@ -405,7 +405,7 @@ function wrapTextNodes(block) {
 /**
  * Decorates paragraphs containing a single link as buttons.
  * @param {Element} element container element
- */
+
 function decorateButtons(element) {
   element.querySelectorAll('a').forEach((a) => {
     a.title = a.title || a.textContent;
@@ -438,6 +438,43 @@ function decorateButtons(element) {
       }
     }
   });
+}
+ */
+
+function decorateButtons(link) {
+  const isEm = link.closest('em');
+  const isStrong = link.closest('strong');
+  const isUnder = link.querySelector('u');
+  if (!(isEm || isStrong || isUnder)) return;
+  const trueParent = link.closest('p, li, div');
+  if (!trueParent) return;
+  const siblings = [...trueParent.childNodes];
+
+  const hasSibling = siblings.every(
+    (el) => el.nodeName === 'A'
+    || el.nodeName === 'EM'
+    || el.nodeName === 'STRONG'
+    || el.nodeName === 'DEL'
+    || !el.textContent.trim(),
+  );
+  if (!hasSibling) return;
+  if (siblings.length > 1) trueParent.classList.add('btn-group');
+
+  link.classList.add('btn');
+  if (isEm && isStrong) {
+    link.classList.add('btn-accent');
+  } else if (isStrong) {
+    link.classList.add('btn-primary');
+  } else if (isEm) {
+    link.classList.add('btn-secondary');
+  }
+  if (isUnder) {
+    link.classList.add('btn-outline');
+    link.innerHTML = isUnder.innerHTML;
+    isUnder.remove();
+  }
+  const toReplace = [isEm, isStrong].find((el) => el?.parentNode === trueParent);
+  if (toReplace) trueParent.replaceChild(link, toReplace);
 }
 
 /**
