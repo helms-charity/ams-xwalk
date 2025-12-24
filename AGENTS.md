@@ -185,8 +185,9 @@ Pages are progressively loaded in three phases to maximize performance. This pro
 ### Block Development
 - Each block in the `blocks/` directory should be self-contained and re-useable
 - Include CSS and JS files for each block
-- Follow the naming convention:`blockname.css`, `blockname.js`, `_blockname.json`
+- Follow the naming convention:`blockname.css`, `blockname.js`
 - Blocks should be responsive and accessible by default
+- For Crosswalk (or Xwalk) with Universal Editor, `blocks/_blockname.json` is required, following the recommendations at https://www.aem.live/developer/component-model-definitions 
 
 ### Styling
 - Global styles go in `styles/styles.css`
@@ -272,6 +273,8 @@ With this information, you can construct URLs for the preview environment (same 
 - Review [Developer Tutorial](https://www.aem.live/developer/tutorial)
 - Consult [The Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)
 - Consider the rules in [David's Model](https://www.aem.live/docs/davidsmodel)
+- For Universal Editor .json configurations specifically using the "xwalk" plugin in the Model Definition, consult https://www.aem.live/developer/component-model-definitions
+- Consider this other user guide at https://experienceleague.adobe.com/en/docs/experience-manager-cloud-service/content/implementing/developing/universal-editor/field-types for further information on non-crosswalk specific Universal Editor allowed configurations
 - Search the web with `site:www.aem.live`
 - Search the full text of the documentation with `curl -s https://www.aem.live/docpages-index.json | jq -r '.data[] | select(.content | test("KEYWORD"; "i")) | "\(.path): \(.title)"'`
 
