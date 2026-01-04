@@ -630,14 +630,90 @@ export function setColorScheme(section) {
   });
 }
 
-function handleBackground(background, section) {
-  const pic = background.content.querySelector('picture');
-  if (pic) {
-    section.classList.add('has-background');
-    pic.classList.add('section-background');
-    section.prepend(pic);
-    return;
+// Cached media query results for performance
+const MEDIA_QUERIES = {
+  mobile: window.matchMedia('(max-width: 599px)'),
+  tablet: window.matchMedia('(min-width: 600px) and (max-width: 899px)'),
+  desktop: window.matchMedia('(min-width: 900px)'),
+};
+
+/**
+ * Helper function to create a <source> element
+ * @param {string} src the image url
+ * @param {number} width the width of the image
+ * @param {MediaQueryList} mediaQuery the media query to apply to the source
+ *
+ * @returns imageSource
+ */
+export function createSource(src, width, mediaQuery) {
+  const { pathname } = new URL(src, window.location.href);
+  const source = document.createElement('source');
+  source.type = 'image/webp';
+  source.srcset = `${pathname}?width=${width}&format=webply&optimize=medium`;
+  source.media = mediaQuery;
+
+  return source;
+}
+
+/**
+ * Extracts image URL from metadata content (picture or img element)
+ * @param {Element} content the metadata content element
+ * @returns {string|null} the image URL or null
+ */
+function extractImageUrl(content) {
+  const img = content.querySelector('img');
+  return img?.src || null;
+}
+
+/**
+ * Creates a responsive picture element for background images with optimization
+ * @param {string} desktopUrl the desktop background image URL
+ * @param {string|null} mobileUrl the mobile background image URL (optional)
+ * @param {Element} section the section element to add the background to
+ */
+function handleBackgroundImages(desktopUrl, mobileUrl, section) {
+  if (!desktopUrl) return;
+
+  const newPic = document.createElement('picture');
+  newPic.classList.add('bg-images');
+
+  // Add mobile source if provided
+  if (mobileUrl) {
+    newPic.appendChild(createSource(mobileUrl, 600, MEDIA_QUERIES.mobile.media));
   }
+
+  // Add desktop source
+  newPic.appendChild(createSource(desktopUrl, 1200, MEDIA_QUERIES.desktop.media));
+
+  // Create the default img element
+  const newImg = document.createElement('img');
+  newImg.alt = '';
+  newImg.className = 'section-img';
+  newImg.loading = 'lazy';
+
+  // Use mobile image as default if available, otherwise desktop
+  const defaultImgUrl = mobileUrl || desktopUrl;
+
+  // Set width and height once image loads to get native dimensions
+  newImg.onload = () => {
+    newImg.width = newImg.naturalWidth;
+    newImg.height = newImg.naturalHeight;
+  };
+  newImg.src = defaultImgUrl;
+
+  newPic.appendChild(newImg);
+  section.classList.add('has-bg-images');
+  section.prepend(newPic);
+}
+
+function handleBackground(background, section) {
+  // const pic = background.content.querySelector('picture');
+  // if (pic) {
+  //   section.classList.add('has-background');
+  //   pic.classList.add('section-background');
+  //   section.prepend(pic);
+  //   return;
+  // }
   const color = background.text;
   if (color) {
     section.style.backgroundColor = color.startsWith('color-token')
@@ -680,13 +756,23 @@ export default async function handleSectionMetadata(el) {
   if (metadata.gap?.text) handleLayout(metadata.gap.text, section, 'gap');
   if (metadata.spacing?.text) handleLayout(metadata.spacing.text, section, 'spacing');
   if (metadata.container?.text) handleLayout(metadata.container.text, section, 'container');
-  if (metadata['background-image']?.content) handleBackground(metadata['background-image'].content, section);
-  // if (metadata['background-image-mobile']?.content) handleBackground(metadata['background-image-mobile'].content, section);
-  // if (metadata['background-fit']?.text) handleBackground(metadata['background-fit'].text, section);
-  // if (metadata['background-position']?.text) handleBackground(metadata['background-position'].text, section);
-  if (metadata.background?.content) handleBackground(metadata.background, section);
+
+  // Handle background images (desktop and mobile variants)
+  const desktopBgImg = metadata['background-image']?.content
+    ? extractImageUrl(metadata['background-image'].content)
+    : null;
+  const mobileBgImg = metadata['background-image-mobile']?.content
+    ? extractImageUrl(metadata['background-image-mobile'].content)
+    : null;
+
+  if (desktopBgImg || mobileBgImg) {
+    handleBackgroundImages(desktopBgImg, mobileBgImg, section);
+  } else if (metadata.background?.content) {
+    // Fallback to legacy background handler for solid colors
+    handleBackground(metadata.background, section);
+  }
+
   el.remove();
-  // this is not removing the parent div
 }
 
 /**
