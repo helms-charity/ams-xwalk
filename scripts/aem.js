@@ -523,10 +523,174 @@ function decorateLinkedPictures(block) {
   });
 }
 
+/* CHARITY - start of ak.js stuff */
+/* 2-letter locales are in scripts.js */
+export function getLocale(locales) {
+  const { pathname } = window.location;
+  const matches = Object.keys(locales).filter((locale) => pathname.startsWith(`${locale}/`));
+  const prefix = getMetadata('locale') || matches.sort((a, b) => b.length - a.length)?.[0] || '';
+  if (locales[prefix].lang) document.documentElement.lang = locales[prefix].lang;
+  return { prefix, ...locales[prefix] };
+}
+
+export const [setConfig, getConfig] = (() => {
+  let config;
+  return [
+    (conf = {}) => {
+      config = {
+        ...conf,
+        // log: conf.log || log,
+        log: conf.log || console.log,
+        locale: getLocale(conf.locales),
+        codeBase: `${import.meta.url.replace('/scripts/aem.js', '')}`,
+      };
+      return config;
+    },
+    () => (config || setConfig()),
+  ];
+})();
+
+function groupChildren(section) {
+  const children = section.querySelectorAll(':scope > *');
+  const groups = [];
+  let currentGroup = null;
+
+  for (const child of children) {
+    const isDiv = child.tagName === 'DIV';
+    const currentType = currentGroup?.classList.contains('block-content');
+
+    if (!currentGroup || currentType !== isDiv) {
+      currentGroup = document.createElement('div');
+      currentGroup.className = isDiv
+        ? 'block-content' : 'default-content';
+      groups.push(currentGroup);
+    }
+
+    currentGroup.append(child);
+  }
+
+  return groups;
+}
+
+/* CHARITY - start of section-metadata.js */
+/**
+ * Converts a CSS color value to RGB values
+ * @param {string} color - CSS color value (hex, rgb, rgba, hsl, hsla, or named color)
+ * @returns {Object|null} Object with r, g, b values (0-255) or null if invalid
+ */
+function parseColor(section) {
+  if (!section) return null;
+
+  const computedBg = getComputedStyle(section).backgroundColor;
+  const rgbMatch = computedBg.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
+  if (!rgbMatch) return null;
+  return {
+    r: parseInt(rgbMatch[1], 10),
+    g: parseInt(rgbMatch[2], 10),
+    b: parseInt(rgbMatch[3], 10),
+  };
+}
+
+function getRelativeLuminance({ r, g, b }) {
+  // Convert to sRGB
+  const rsRGB = r / 255;
+  const gsRGB = g / 255;
+  const bsRGB = b / 255;
+
+  // Apply gamma correction
+  const rLinear = rsRGB <= 0.03928 ? rsRGB / 12.92 : ((rsRGB + 0.055) / 1.055) ** 2.4;
+  const gLinear = gsRGB <= 0.03928 ? gsRGB / 12.92 : ((gsRGB + 0.055) / 1.055) ** 2.4;
+  const bLinear = bsRGB <= 0.03928 ? bsRGB / 12.92 : ((bsRGB + 0.055) / 1.055) ** 2.4;
+
+  // Calculate relative luminance
+  return 0.2126 * rLinear + 0.7152 * gLinear + 0.0722 * bLinear;
+}
+
+/**
+ * Determines if a CSS color value is light or dark
+ * @param {string} color - CSS color value
+ * @param {number} threshold - Luminance threshold (default: 0.5)
+ * @returns {boolean} true if light, false if dark, null if invalid color
+ */
+export function getColorScheme(section) {
+  const rgb = parseColor(section);
+  if (!rgb) return null;
+
+  return getRelativeLuminance(rgb) > 0.5 ? 'light-scheme' : 'dark-scheme';
+}
+
+export function setColorScheme(section) {
+  const scheme = getColorScheme(section);
+  if (!scheme) return;
+  section.querySelectorAll(':scope > *').forEach((el) => {
+    // Reset any pre-made color schemes
+    el.classList.remove('light-scheme', 'dark-scheme');
+    el.classList.add(scheme);
+  });
+}
+
+function handleBackground(background, section) {
+  const pic = background.content.querySelector('picture');
+  if (pic) {
+    section.classList.add('has-background');
+    pic.classList.add('section-background');
+    section.prepend(pic);
+    return;
+  }
+  const color = background.text;
+  if (color) {
+    section.style.backgroundColor = color.startsWith('color-token')
+      ? `var(${color.replace('color-token', '--color')})`
+      : color;
+    setColorScheme(section);
+  }
+}
+
+async function handleStyle(text, section) {
+  const styles = text.split(', ').map((style) => style.replaceAll(' ', '-'));
+  section.classList.add(...styles);
+}
+
+async function handleLayout(text, section, type) {
+  if (text === '0') return;
+  if (type === 'grid') section.classList.add('grid');
+  section.classList.add(`${type}-${text}`);
+}
+
+// TODO: replace with UE metadata for sections? currently looking for section-metadata block
+const getSectionMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
+  if (row.children) {
+    console.log('there are children', row.children);
+    const key = row.children[0].textContent.trim().toLowerCase();
+    const content = row.children[1];
+    const text = content.textContent.trim().toLowerCase();
+    if (key && content) rdx[key] = { content, text };
+  }
+  return rdx;
+}, {});
+
+// end section-metadata table
+
+
+export default async function handleSectionMetadata(el) {
+  const section = el.closest('.section');
+  if (!section) return;
+  const metadata = getSectionMetadata(el);
+  if (metadata.style?.text) await handleStyle(metadata.style.text, section);
+  if (metadata.grid?.text) handleLayout(metadata.grid.text, section, 'grid');
+  if (metadata.gap?.text) handleLayout(metadata.gap.text, section, 'gap');
+  if (metadata.spacing?.text) handleLayout(metadata.spacing.text, section, 'spacing');
+  if (metadata.container?.text) handleLayout(metadata.container.text, section, 'container');
+  if (metadata['background-color']?.content) handleBackground(metadata['background-color'].content, section);
+  if (metadata['background-image']?.content) handleBackground(metadata['background-image'].content, section);
+  if (metadata.background?.content) handleBackground(metadata.background, section);
+  el.remove();
+}
+
 /**
  * Decorates all sections in a container element.
  * @param {Element} main The container element
- */
+
 function decorateSections(main) {
   main.querySelectorAll(':scope > div:not([data-section-status])').forEach((section) => {
     const wrappers = [];
@@ -562,6 +726,111 @@ function decorateSections(main) {
       });
       sectionMeta.parentNode.remove();
     }
+  });
+}
+  */
+
+/* CHARITY - for adding customization to the links */
+function decorateHash(a, url) {
+  const { hash } = url;
+  if (!hash || hash === '#') return {};
+
+  const findHash = (name) => {
+    const found = hash.includes(name);
+    if (found) a.href = a.href.replace(name, '');
+    return found;
+  };
+
+  const blank = findHash('#_blank');
+  if (blank) a.target = '_blank';
+
+  const dnt = findHash('#_dnt');
+  const dnb = findHash('#_dnb');
+  return { dnt, dnb };
+}
+
+export function localizeUrl({ config, url }) {
+  const { locales, locale } = config;
+
+  // If we are in the root locale, do nothing
+  if (locale.prefix === '') return null;
+
+  const {
+    origin,
+    pathname,
+    search,
+    hash,
+  } = url;
+
+  // If the link is already localized, do nothing
+  if (pathname.startsWith(`${locale.prefix}/`)) return null;
+
+  const localized = Object.keys(locales).some(
+    (key) => key !== '' && pathname.startsWith(`${key}/`),
+  );
+  if (localized) return null;
+
+  return new URL(`${origin}${locale.prefix}${pathname}${search}${hash}`);
+}
+
+function decorateLink(config, a) {
+  try {
+    const url = new URL(a.href);
+    const hostMatch = config.hostnames.some((host) => url.hostname.endsWith(host));
+    if (hostMatch) a.href = a.href.replace(url.origin, '');
+
+    const { dnt, dnb } = decorateHash(a, url);
+    if (!dnt) {
+      const localized = localizeUrl({ config, url });
+      if (localized) a.href = localized.href;
+    }
+    decorateButtons(a);
+    if (!dnb) {
+      const { href } = a;
+      const found = config.widgets.some((pattern) => {
+        const key = Object.keys(pattern)[0];
+        if (!href.includes(pattern[key])) return false;
+        a.classList.add(key, 'auto-block');
+        return true;
+      });
+      if (found) return a;
+    }
+  } catch (ex) {
+    config.log('Could not decorate link');
+    config.log(ex);
+  }
+  return null;
+}
+
+function decorateLinks(el) {
+  const config = getConfig();
+  const anchors = [...el.querySelectorAll('a')];
+  return anchors.reduce((acc, a) => {
+    const decorated = decorateLink(config, a);
+    if (decorated) acc.push(decorated);
+    return acc;
+  }, []);
+}
+
+function decorateSections(parent, isDoc) {
+  const selector = isDoc ? 'main > div' : ':scope > div';
+  return [...parent.querySelectorAll(selector)].map((section) => {
+    const groups = groupChildren(section);
+    section.append(...groups);
+
+    section.classList.add('section');
+    section.dataset.status = 'decorated';
+
+    section.widgets = decorateLinks(section);
+    section.blocks = [...section.querySelectorAll('.block-content > div[class]')];
+
+    // Handle section metadata if present, originally from section-metadata.js
+    const sectionMeta = section.querySelector('.section-metadata');
+    if (sectionMeta) {
+      handleSectionMetadata(sectionMeta);
+    }
+
+    return section;
   });
 }
 

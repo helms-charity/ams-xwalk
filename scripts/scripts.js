@@ -11,6 +11,7 @@ import {
   loadSection,
   loadSections,
   loadCSS,
+  setConfig,
 } from './aem.js';
 
 /**
@@ -88,6 +89,41 @@ function a11yLinks(main) {
   });
 }
 
+/* CHARITY - author-kit scrpit stuff */
+
+const hostnames = ['localhost', 'helms-charity.hlx.page'];
+
+const locales = {
+  '': { lang: 'en' },
+  '/de': { lang: 'de' },
+  '/es': { lang: 'es' },
+  '/fr': { lang: 'fr' },
+  '/hi': { lang: 'hi' },
+  '/ja': { lang: 'ja' },
+  '/zh': { lang: 'zh' },
+};
+
+// Widget patterns to look for
+const widgets = [
+  { fragment: '/fragments/' },
+  { youtube: 'https://www.youtube' },
+];
+
+// Blocks with self-managed styles
+const components = ['fragment'];
+
+// How to decorate an area before loading it
+const decorateArea = ({ area = document }) => {
+  const eagerLoad = (parent, selector) => {
+    const img = parent.querySelector(selector);
+    if (!img) return;
+    img.removeAttribute('loading');
+    img.fetchPriority = 'high';
+  };
+
+  eagerLoad(area, 'img');
+};
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -111,6 +147,7 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
+  setConfig({ hostnames, locales, widgets, components, decorateArea });
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -160,6 +197,7 @@ function loadDelayed() {
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
+//  await loadArea();
   loadDelayed();
 }
 

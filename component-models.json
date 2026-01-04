@@ -133,6 +133,36 @@
         "name": "style",
         "label": "Style",
         "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "grid",
+        "label": "Grid",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "gap",
+        "label": "Gap",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "spacing",
+        "label": "Spacing",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "container",
+        "label": "Container",
+        "valueType": "string"
+      },
+      {
+        "component": "text",
+        "name": "background",
+        "label": "Background Color",
+        "valueType": "string"
       }
     ]
   },
