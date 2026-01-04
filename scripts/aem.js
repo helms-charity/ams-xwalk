@@ -524,7 +524,7 @@ function decorateLinkedPictures(block) {
 }
 
 /* CHARITY - start of ak.js stuff */
-/* 2-letter locales are in scripts.js */
+/* locales are defined in scripts.js */
 export function getLocale(locales) {
   const { pathname } = window.location;
   const matches = Object.keys(locales).filter((locale) => pathname.startsWith(`${locale}/`));
@@ -550,6 +550,7 @@ export const [setConfig, getConfig] = (() => {
   ];
 })();
 
+/* CHARITY - separates default content from block content for sections */
 function groupChildren(section) {
   const children = section.querySelectorAll(':scope > *');
   const groups = [];
@@ -659,8 +660,7 @@ async function handleLayout(text, section, type) {
 
 // TODO: replace with UE metadata for sections? currently looking for section-metadata block
 const getSectionMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
-  if (row.children) {
-    console.log('there are children', row.children);
+  if (row.children && row.children.length >= 2) {
     const key = row.children[0].textContent.trim().toLowerCase();
     const content = row.children[1];
     const text = content.textContent.trim().toLowerCase();
@@ -671,7 +671,6 @@ const getSectionMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
 
 // end section-metadata table
 
-
 export default async function handleSectionMetadata(el) {
   const section = el.closest('.section');
   if (!section) return;
@@ -681,10 +680,13 @@ export default async function handleSectionMetadata(el) {
   if (metadata.gap?.text) handleLayout(metadata.gap.text, section, 'gap');
   if (metadata.spacing?.text) handleLayout(metadata.spacing.text, section, 'spacing');
   if (metadata.container?.text) handleLayout(metadata.container.text, section, 'container');
-  if (metadata['background-color']?.content) handleBackground(metadata['background-color'].content, section);
   if (metadata['background-image']?.content) handleBackground(metadata['background-image'].content, section);
+  // if (metadata['background-image-mobile']?.content) handleBackground(metadata['background-image-mobile'].content, section);
+  // if (metadata['background-fit']?.text) handleBackground(metadata['background-fit'].text, section);
+  // if (metadata['background-position']?.text) handleBackground(metadata['background-position'].text, section);
   if (metadata.background?.content) handleBackground(metadata.background, section);
   el.remove();
+  // this is not removing the parent div
 }
 
 /**

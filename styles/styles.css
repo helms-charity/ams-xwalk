@@ -331,7 +331,8 @@ main img {
   display: none;
 }
 
-/* custom styles for sections 2025-12-24T10:35:58-05:00 */
+/* custom styles for sections 2025-12-24T10:35:58-05:00 
+was in section-medata.css */
 
 .section {
   --top-bottom-spacing: 0;
@@ -433,7 +434,7 @@ main img {
     margin-top: 0;
   }
 
-  &.container {
+  &[class*="container-"] { /* instead of requiring a container style */
     .default-content,
     .block-content {
       max-width: var(--section-container-width);
@@ -513,6 +514,8 @@ main img {
     grid-template-columns: repeat(var(--grid-size), 1fr);
   }
 }
+
+/* end of custom styles for sections */
 
 @media (width >= 1440px) {
   :root {

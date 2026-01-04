@@ -89,18 +89,18 @@ function a11yLinks(main) {
   });
 }
 
-/* CHARITY - author-kit scrpit stuff */
+/* CHARITY - author-kit script stuff */
 
 const hostnames = ['localhost', 'helms-charity.hlx.page'];
 
 const locales = {
   '': { lang: 'en' },
-  '/de': { lang: 'de' },
-  '/es': { lang: 'es' },
-  '/fr': { lang: 'fr' },
-  '/hi': { lang: 'hi' },
-  '/ja': { lang: 'ja' },
-  '/zh': { lang: 'zh' },
+  // '/de': { lang: 'de' },
+  // '/es': { lang: 'es' },
+  // '/fr': { lang: 'fr' },
+  // '/hi': { lang: 'hi' },
+  // '/ja': { lang: 'ja' },
+  // '/zh': { lang: 'zh' },
 };
 
 // Widget patterns to look for
@@ -147,7 +147,9 @@ export function decorateMain(main) {
 async function loadEager(doc) {
   document.documentElement.lang = 'en';
   decorateTemplateAndTheme();
-  setConfig({ hostnames, locales, widgets, components, decorateArea });
+  setConfig({
+    hostnames, locales, widgets, components, decorateArea,
+  });
   const main = doc.querySelector('main');
   if (main) {
     decorateMain(main);
@@ -197,12 +199,12 @@ function loadDelayed() {
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
-//  await loadArea();
   loadDelayed();
 }
 
 loadPage();
 
+/* CHARITY - da specific stuff */
 const { searchParams, origin } = new URL(window.location.href);
 const branch = searchParams.get('nx') || 'main';
 

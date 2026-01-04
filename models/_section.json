@@ -54,13 +54,80 @@
           "component": "text",
           "name": "container",
           "label": "Container",
-          "valueType": "string"
+          "valueType": "string",
+          "description": "container = width of .section > div"
         },
         {
           "component": "text",
           "name": "background",
           "label": "Background Color",
           "valueType": "string"
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "background-image",
+          "label": "Background Image",
+          "description": "Background image of the section, displayed on top of the background color if specified",
+          "multi": false
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "background-image-mobile",
+          "label": "Background Image Mobile",
+          "description": "Background image for mobile",
+          "multi": false
+        },
+        {
+          "component": "select",
+          "valueType": "string",
+          "name": "background-fit",
+          "label": "Background Fit",
+          "value": "cover",
+          "options": [
+            {
+              "name": "cover",
+              "value": "cover"
+            },
+            {
+              "name": "contain",
+              "value": "contain"
+            },
+            {
+              "name": "none",
+              "value": "none"
+            }
+          ]
+        },
+        {
+          "component": "select",
+          "valueType": "string",
+          "name": "background-position",
+          "label": "Background Image Position",
+          "value": "center",
+          "options": [
+            {
+              "name": "center",
+              "value": "center"
+            },
+            {
+              "name": "top left",
+              "value": "top left"
+            },
+            {
+              "name": "top right",
+              "value": "top right"
+            },
+            {
+              "name": "bottom left",
+              "value": "bottom left"
+            },
+            {
+              "name": "bottom right",
+              "value": "bottom right"
+            }
+          ]
         }
       ]
     }
