@@ -184,7 +184,7 @@
       {
         "component": "select",
         "valueType": "string",
-        "name": "background-fit",
+        "name": "object-fit",
         "label": "Background Fit",
         "value": "cover",
         "options": [
@@ -205,7 +205,7 @@
       {
         "component": "select",
         "valueType": "string",
-        "name": "background-position",
+        "name": "object-position",
         "label": "Background Image Position",
         "value": "center",
         "options": [
