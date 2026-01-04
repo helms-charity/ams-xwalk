@@ -12,3 +12,4 @@ helix-importer-ui
 .vscode
 .cursor
 tools/node_modules/*
+scripts/scratch-ak.js
