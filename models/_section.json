@@ -41,13 +41,13 @@
         {
           "component": "text",
           "name": "gap",
-          "label": "Gap",
+          "label": "Gap between blocks",
           "valueType": "string"
         },
         {
           "component": "text",
           "name": "spacing",
-          "label": "Spacing",
+          "label": "Spacing top and bottom of section",
           "valueType": "string"
         },
         {
@@ -126,6 +126,87 @@
             {
               "name": "bottom right",
               "value": "bottom right"
+            }
+          ]
+        },
+        {
+          "component": "container",
+          "label": "Optional block-content background properties",
+          "name": "container",
+          "valueType": "string",
+          "collapsible": true,
+          "fields": [
+            {
+              "component": "text",
+              "name": "background-block",
+              "label": "Background Color",
+              "valueType": "string"
+            },
+            {
+              "component": "reference",
+              "valueType": "string",
+              "name": "background-block-image",
+              "label": "Block-content Background Image",
+              "description": "Background image of the section, displayed on top of the background color if specified",
+              "multi": false
+            },
+            {
+              "component": "reference",
+              "valueType": "string",
+              "name": "background-block-image-mobile",
+              "label": "Block-content Background Image Mobile",
+              "description": "Background image for mobile",
+              "multi": false
+            },
+            {
+              "component": "select",
+              "valueType": "string",
+              "name": "object-fit-block",
+              "label": "Block-content Background Fit",
+              "value": "cover",
+              "options": [
+                {
+                  "name": "cover",
+                  "value": "cover"
+                },
+                {
+                  "name": "contain",
+                  "value": "contain"
+                },
+                {
+                  "name": "none",
+                  "value": "none"
+                }
+              ]
+            },
+            {
+              "component": "select",
+              "valueType": "string",
+              "name": "object-position-block",
+              "label": "Block-content Background Image Position",
+              "value": "center",
+              "options": [
+                {
+                  "name": "center",
+                  "value": "center"
+                },
+                {
+                  "name": "top left",
+                  "value": "top left"
+                },
+                {
+                  "name": "top right",
+                  "value": "top right"
+                },
+                {
+                  "name": "bottom left",
+                  "value": "bottom left"
+                },
+                {
+                  "name": "bottom right",
+                  "value": "bottom right"
+                }
+              ]
             }
           ]
         }

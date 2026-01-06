@@ -580,9 +580,9 @@ function groupChildren(section) {
  * @returns {Object|null} Object with r, g, b values (0-255) or null if invalid
  */
 function parseColor(section) {
-  if (!section) return null;
+  if (!section) return null; // for now, only using on sections
 
-  const computedBg = getComputedStyle(section).backgroundColor;
+  const computedBg = getComputedStyle(section).background;
   const rgbMatch = computedBg.match(/rgb\((\d+),\s*(\d+),\s*(\d+)\)/);
   if (!rgbMatch) return null;
   return {
@@ -680,10 +680,12 @@ function handleBackgroundImages(desktopUrl, mobileUrl, section) {
   // Add mobile source if provided
   if (mobileUrl) {
     newPic.appendChild(createSource(mobileUrl, 600, MEDIA_QUERIES.mobile.media));
+  } else {
+    newPic.appendChild(createSource(desktopUrl, 899, MEDIA_QUERIES.tablet.media));
   }
 
   // Add desktop source
-  newPic.appendChild(createSource(desktopUrl, 1200, MEDIA_QUERIES.desktop.media));
+  newPic.appendChild(createSource(desktopUrl, 1920, MEDIA_QUERIES.desktop.media));
 
   // Create the default img element
   const newImg = document.createElement('img');
@@ -715,8 +717,9 @@ function handleBackground(background, section) {
   //   return;
   // }
   const color = background.text;
+  // instead of typing "var(--color-name)" authors can use "color-token-name"
   if (color) {
-    section.style.backgroundColor = color.startsWith('color-token')
+    section.style.background = color.startsWith('color-token')
       ? `var(${color.replace('color-token', '--color')})`
       : color;
     setColorScheme(section);
@@ -734,7 +737,6 @@ async function handleLayout(text, section, type) {
   section.classList.add(`${type}-${text}`);
 }
 
-// TODO: replace with UE metadata for sections? currently looking for section-metadata block
 const getSectionMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
   if (row.children && row.children.length >= 2) {
     const key = row.children[0].textContent.trim().toLowerCase();
@@ -745,19 +747,30 @@ const getSectionMetadata = (el) => [...el.childNodes].reduce((rdx, row) => {
   return rdx;
 }, {});
 
-// end section-metadata table
-
 export default async function handleSectionMetadata(el) {
   const section = el.closest('.section');
   if (!section) return;
   const metadata = getSectionMetadata(el);
+
+  // Special cases for SECTION - handle these first
   if (metadata.style?.text) await handleStyle(metadata.style.text, section);
   if (metadata.grid?.text) handleLayout(metadata.grid.text, section, 'grid');
   if (metadata.gap?.text) handleLayout(metadata.gap.text, section, 'gap');
   if (metadata.spacing?.text) handleLayout(metadata.spacing.text, section, 'spacing');
   if (metadata.container?.text) handleLayout(metadata.container.text, section, 'container');
+  if (metadata.background?.text) handleBackground(metadata.background, section);
 
-  // Handle background images (desktop and mobile variants)
+  // Define which keys are handled specially for section or block-content
+  const specialKeys = ['style', 'grid', 'gap', 'spacing', 'container', 'background-image', 'background-image-mobile', 'background', 'background-block', 'background-block-image', 'background-block-image-mobile', 'object-fit-block', 'object-position-block'];
+
+  // Catch-all: set any other metadata as data- attributes on section
+  Object.keys(metadata).forEach((key) => {
+    if (!specialKeys.includes(key)) {
+      section.dataset[toCamelCase(key)] = metadata[key].text;
+    }
+  });
+
+  // Handle SECTION background images (desktop and mobile variants)
   const desktopBgImg = metadata['background-image']?.content
     ? extractImageUrl(metadata['background-image'].content)
     : null;
@@ -767,9 +780,43 @@ export default async function handleSectionMetadata(el) {
 
   if (desktopBgImg || mobileBgImg) {
     handleBackgroundImages(desktopBgImg, mobileBgImg, section);
-  } else if (metadata.background?.content) {
-    // Fallback to legacy background handler for solid colors
-    handleBackground(metadata.background, section);
+  }
+
+  // Handle BLOCK-CONTENT specific properties
+  const blockContents = section.querySelectorAll(':scope > div.block-content');
+  if (blockContents.length > 0) {
+    // Handle background-block color
+    if (metadata['background-block']?.text) {
+      blockContents.forEach((blockContent) => {
+        handleBackground(metadata['background-block'], blockContent);
+      });
+    }
+
+    // Handle block-content background images
+    const desktopBlockBgImg = metadata['background-block-image']?.content
+      ? extractImageUrl(metadata['background-block-image'].content)
+      : null;
+    const mobileBlockBgImg = metadata['background-block-image-mobile']?.content
+      ? extractImageUrl(metadata['background-block-image-mobile'].content)
+      : null;
+
+    if (desktopBlockBgImg || mobileBlockBgImg) {
+      blockContents.forEach((blockContent) => {
+        handleBackgroundImages(desktopBlockBgImg, mobileBlockBgImg, blockContent);
+      });
+    }
+
+    // Set object-fit-block and object-position-block as data attributes on block-content
+    if (metadata['object-fit-block']?.text) {
+      blockContents.forEach((blockContent) => {
+        blockContent.dataset.objectFit = metadata['object-fit-block'].text;
+      });
+    }
+    if (metadata['object-position-block']?.text) {
+      blockContents.forEach((blockContent) => {
+        blockContent.dataset.objectPosition = metadata['object-position-block'].text;
+      });
+    }
   }
 
   el.remove();
@@ -818,7 +865,7 @@ function decorateSections(main) {
 }
   */
 
-/* CHARITY - for adding customization to the links */
+/* CHARITY - for adding customization to the text links */
 function decorateHash(a, url) {
   const { hash } = url;
   if (!hash || hash === '#') return {};
@@ -907,9 +954,9 @@ function decorateSections(parent, isDoc) {
     section.append(...groups);
 
     section.classList.add('section');
-    section.dataset.status = 'decorated';
+    //  section.dataset.status = 'decorated'; // loadArea deletes this
 
-    section.widgets = decorateLinks(section);
+    section.widgets = decorateLinks(section); // replaces the auto-embed function here
     section.blocks = [...section.querySelectorAll('.block-content > div[class]')];
 
     // Handle section metadata if present, originally from section-metadata.js
@@ -1041,6 +1088,7 @@ function decorateBlock(block) {
     const blockWrapper = block.parentElement;
     blockWrapper.classList.add(`${shortBlockName}-wrapper`);
     const section = block.closest('.section');
+    // append block name with -container since we are already using -wrapper
     if (section) section.classList.add(`${shortBlockName}-container`);
     // eslint-disable-next-line no-use-before-define
     decorateButtons(block);
