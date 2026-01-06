@@ -168,20 +168,6 @@ async function loadEager(doc) {
   }
 }
 
-function decoratePictures(el) {
-  const pics = el.querySelectorAll('picture');
-  for (const pic of pics) {
-    const source = pic.querySelector('source');
-    const clone = source.cloneNode();
-    const [pathname, params] = clone.getAttribute('srcset').split('?');
-    const search = new URLSearchParams(params);
-    search.set('width', 3000);
-    clone.setAttribute('srcset', `${pathname}?${search.toString()}`);
-    clone.setAttribute('media', '(min-width: 1440px)');
-    pic.prepend(clone);
-  }
-}
-
 async function lazyHash() {
   const id = window.localStorage.getItem('lazyhash');
   if (!id) return;
@@ -206,7 +192,6 @@ async function loadLazy(doc) {
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();
-  decoratePictures(doc);
   lazyHash();
 }
 

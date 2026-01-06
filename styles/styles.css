@@ -52,6 +52,9 @@
   --color-red-700: #950c00;
   --color-red-800: #670800;
   --color-red-900: #3c0500;
+  --gradient-blue: linear-gradient(137deg, #08133C 4.07%, #2E3E79 75.46%);
+  --gradient-silver: linear-gradient(208deg, #C8C6C6 0%, #F1F0F0 53.5%, #C8C6C6 100%);
+  --gradient-moose: radial-gradient(at top left, #AC2A34 0%, #661E2A 50%, #140F23 100%);
 
   /* fonts */
   --font-family: roboto, roboto-fallback, sans-serif;
@@ -454,16 +457,7 @@ was in section-medata.css */
     }
   }
 
-  &.has-bg-images {
-    position: relative;
-
-    .default-content,
-    .block-content {
-      position: relative;
-    }
-  }
-
-  picture.bg-images {
+  .bg-images {
     display: block;
     position: absolute;
     inset: 0;
@@ -477,47 +471,46 @@ was in section-medata.css */
   }
 }
 
+.has-bg-images {
+  position: relative;
 
-[data-object-fit="none"] .bg-images img,
-[data-object-fit-block="none"] .bg-images img {
+  > div {
+    position: relative;
+  }
+
+&[data-object-fit="none"] > .bg-images img {
   object-fit: none;
 }
 
-[data-object-fit="contain"] .bg-images img,
-[data-object-fit-block="contain"] .bg-images img {
+&[data-object-fit="contain"] > .bg-images img {
   object-fit: contain;
 }
 
-[data-object-fit="cover"] .bg-images img,
-[data-object-fit-block="cover"] .bg-images img {
+&[data-object-fit="cover"] > .bg-images img {
   object-fit: cover;
   height: 100%;
   width: 100%;
 }
 
-[data-object-position="center"] .bg-images img,
-[data-object-position-block="center"] .bg-images img {
+&[data-object-position="center"] > .bg-images img {
   object-position: center;
 }
 
-[data-object-position="top left"] .bg-images img,
-[data-object-position-block="top left"] .bg-images img {
+&[data-object-position="top left"] > .bg-images img {
   object-position: top left;
 }
 
-[data-object-position="top right"] .bg-images img,
-[data-object-position-block="top right"] .bg-images img {
+&[data-object-position="top right"] > .bg-images img {
   object-position: top right;
 }
 
-[data-object-position="bottom left"] .bg-images img,
-[data-object-position-block="bottom left"] .bg-images img {
+&[data-object-position="bottom left"] > .bg-images img {
   object-position: bottom left;
 }
 
-[data-object-position="bottom right"] .bg-images img,
-[data-object-position-block="bottom right"] .bg-images img {
+&[data-object-position="bottom right"] > .bg-images img {
   object-position: bottom right;
+}
 }
 
 @media (width >= 600px) {
