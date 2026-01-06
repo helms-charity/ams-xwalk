@@ -234,7 +234,7 @@
       {
         "component": "container",
         "label": "Optional block-content background properties",
-        "name": "container",
+        "name": "options-container",
         "valueType": "string",
         "collapsible": true,
         "fields": [
