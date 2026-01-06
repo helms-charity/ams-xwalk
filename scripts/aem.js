@@ -709,13 +709,6 @@ function handleBackgroundImages(desktopUrl, mobileUrl, section) {
 }
 
 function handleBackground(background, section) {
-  // const pic = background.content.querySelector('picture');
-  // if (pic) {
-  //   section.classList.add('has-background');
-  //   pic.classList.add('section-background');
-  //   section.prepend(pic);
-  //   return;
-  // }
   const color = background.text;
   // instead of typing "var(--color-name)" authors can use "color-token-name"
   if (color) {
@@ -732,6 +725,10 @@ async function handleStyle(text, section) {
 }
 
 async function handleLayout(text, section, type) {
+  // any and all .block-content divs will get this treatment
+  // so if you want all blocks in a section to be in the same grid,
+  // you can't have default content in between blocks.
+  // otherwise each block-content will get its own grid.
   if (text === '0') return;
   if (type === 'grid') section.classList.add('grid');
   section.classList.add(`${type}-${text}`);
