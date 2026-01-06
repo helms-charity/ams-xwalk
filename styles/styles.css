@@ -454,7 +454,7 @@ was in section-medata.css */
     }
   }
 
-  &.has-background {
+  &.has-bg-images {
     position: relative;
 
     .default-content,
@@ -463,18 +463,61 @@ was in section-medata.css */
     }
   }
 
-  picture.section-background {
+  picture.bg-images {
     display: block;
     position: absolute;
     inset: 0;
     z-index: 0;
   }
 
-  .section-background img {
+  .bg-images img {
     object-fit: cover;
     height: 100%;
     width: 100%;
   }
+}
+
+
+[data-object-fit="none"] .bg-images img,
+[data-object-fit-block="none"] .bg-images img {
+  object-fit: none;
+}
+
+[data-object-fit="contain"] .bg-images img,
+[data-object-fit-block="contain"] .bg-images img {
+  object-fit: contain;
+}
+
+[data-object-fit="cover"] .bg-images img,
+[data-object-fit-block="cover"] .bg-images img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+
+[data-object-position="center"] .bg-images img,
+[data-object-position-block="center"] .bg-images img {
+  object-position: center;
+}
+
+[data-object-position="top left"] .bg-images img,
+[data-object-position-block="top left"] .bg-images img {
+  object-position: top left;
+}
+
+[data-object-position="top right"] .bg-images img,
+[data-object-position-block="top right"] .bg-images img {
+  object-position: top right;
+}
+
+[data-object-position="bottom left"] .bg-images img,
+[data-object-position-block="bottom left"] .bg-images img {
+  object-position: bottom left;
+}
+
+[data-object-position="bottom right"] .bg-images img,
+[data-object-position-block="bottom right"] .bg-images img {
+  object-position: bottom right;
 }
 
 @media (width >= 600px) {

@@ -16,6 +16,9 @@ module.exports = {
     'import/extensions': ['error', { js: 'always' }], // require js file extensions in imports
     'linebreak-style': ['error', process.platform === 'win32' ? 'windows' : 'unix'], // enforce linebreaks based on platform
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
+    'xwalk/max-cells': ['error', {
+      section: 100, // section is a key-value block
+    }],
     'no-restricted-syntax': [
       'error',
       {
