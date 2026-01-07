@@ -550,9 +550,23 @@ export const [setConfig, getConfig] = (() => {
   ];
 })();
 
-/* CHARITY - separates default content from block content for sections */
 function groupChildren(section) {
-  const children = section.querySelectorAll(':scope > *');
+  const allChildren = section.querySelectorAll(':scope > *');
+
+  // Filter out section-metadata elements from "blocks"
+  const children = [...allChildren].filter((child) => !child.classList.contains('section-metadata'));
+  if (children.length === 0) return [];
+  const hasBlocks = children.some((child) => child.tagName === 'DIV' && child.className);
+
+  // If no blocks, just wrap everything in default-content and return
+  if (!hasBlocks) {
+    const defaultWrapper = document.createElement('div');
+    defaultWrapper.className = 'default-content';
+    children.forEach((child) => defaultWrapper.append(child));
+    return [defaultWrapper];
+  }
+
+  // Otherwise, group blocks and default content separately
   const groups = [];
   let currentGroup = null;
 
