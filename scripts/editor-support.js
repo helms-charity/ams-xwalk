@@ -4,13 +4,12 @@ import {
   decorateBlocks,
   decorateButtons,
   decorateIcons,
-  decorateSections,
   loadBlock,
   loadScript,
   loadSections,
 } from './aem.js';
 import { decorateRichtext } from './editor-support-rte.js';
-import { decorateMain } from './scripts.js';
+import { decorateMain, decorateSections } from './scripts.js';
 
 /**
  *
