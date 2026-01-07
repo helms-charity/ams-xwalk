@@ -75,6 +75,30 @@ export const [setConfig, getConfig] = (() => {
   ];
 })();
 
+/* original one */
+function groupChildren(section) {
+  const children = section.querySelectorAll(':scope > *');
+  const groups = [];
+  let currentGroup = null;
+
+  for (const child of children) {
+    const isDiv = child.tagName === 'DIV';
+    const currentType = currentGroup?.classList.contains('block-content');
+
+    if (!currentGroup || currentType !== isDiv) {
+      currentGroup = document.createElement('div');
+      currentGroup.className = isDiv
+        ? 'block-content' : 'default-content';
+      groups.push(currentGroup);
+    }
+
+    currentGroup.append(child);
+  }
+
+  return groups;
+}
+
+/*
 function groupChildren(section) {
   const allChildren = section.querySelectorAll(':scope > *');
 
@@ -111,6 +135,7 @@ function groupChildren(section) {
 
   return groups;
 }
+*/
 
 /* CHARITY - start of section-metadata.js */
 /**
