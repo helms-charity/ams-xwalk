@@ -43,6 +43,25 @@
     "id": "title",
     "fields": [
       {
+        "component": "select",
+        "name": "classes",
+        "label": "Style",
+        "options": [
+          {
+            "name": "Center",
+            "value": "center"
+          },
+          {
+            "name": "Left",
+            "value": "left"
+          },
+          {
+            "name": "Right",
+            "value": "right"
+          }
+        ]
+      },
+      {
         "component": "text",
         "name": "title",
         "label": "Title"
@@ -137,25 +156,25 @@
       {
         "component": "text",
         "name": "grid",
-        "label": "Grid",
+        "label": "Grid (# of columns, 2-6)",
         "valueType": "string"
       },
       {
         "component": "text",
         "name": "gap",
-        "label": "Gap between blocks",
+        "label": "Gap between blocks (xs, s, m, l, xl, xxl)",
         "valueType": "string"
       },
       {
         "component": "text",
         "name": "spacing",
-        "label": "Spacing top and bottom of section",
+        "label": "Spacing top and bottom of section (xs, s, m, l, xl, xxl)",
         "valueType": "string"
       },
       {
         "component": "text",
         "name": "container",
-        "label": "Container",
+        "label": "Inner container width(2, 4, 6)",
         "valueType": "string",
         "description": "container = width of .section > div"
       },
@@ -321,7 +340,8 @@
         "component": "text",
         "valueType": "string",
         "name": "classes",
-        "label": "Style"
+        "value": "",
+        "label": "Style (comma separated list of classes)"
       }
     ]
   },

@@ -42,7 +42,8 @@
           "component": "text",
           "valueType": "string",
           "name": "classes",
-          "label": "Style"
+          "value": "",
+          "label": "Style (comma separated list of classes)"
         }
       ]
     },

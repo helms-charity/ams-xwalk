@@ -75,6 +75,11 @@ export const [setConfig, getConfig] = (() => {
   ];
 })();
 
+/**
+ * Groups the children of a section into block-content and default-content groups
+ * @param {Element} section the section element to group the children of
+ * @returns {Array<Element>} the grouped children
+ */
 function groupChildren(section) {
   const allChildren = section.querySelectorAll(':scope > *');
 
