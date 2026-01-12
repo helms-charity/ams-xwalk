@@ -20,6 +20,25 @@
       "id": "title",
       "fields": [
         {
+          "component": "select",
+          "name": "classes",
+          "label": "Style",
+          "options": [
+            {
+              "name": "Center",
+              "value": "center"
+            },
+            {
+              "name": "Left",
+              "value": "left"
+            },
+            {
+              "name": "Right",
+              "value": "right"
+            }
+          ]
+        },
+        {
           "component": "text",
           "name": "title",
           "label": "Title"
