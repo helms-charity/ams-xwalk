@@ -543,6 +543,14 @@ function a11yLinks(main) {
   });
 }
 
+/* add a block id to the block */
+const blockIds = {};
+export function getBlockId(name) {
+  const forBlock = blockIds[name] || 0;
+  blockIds[name] = forBlock + 1;
+  return `${name}_${forBlock}`;
+}
+
 /* CHARITY - author-kit script stuff */
 
 const hostnames = ['localhost', 'helms-charity.hlx.page'];
