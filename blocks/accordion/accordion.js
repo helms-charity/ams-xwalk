@@ -4,7 +4,7 @@
  * https://www.hlx.live/developer/block-collection/accordion
  */
 
-import { moveInstrumentation, getBlockId } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 export default function decorate(block) {
   block.id = getBlockId('accordion');

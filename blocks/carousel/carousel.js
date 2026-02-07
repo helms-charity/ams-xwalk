@@ -1,5 +1,5 @@
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 function updateActiveSlide(slide) {
   const block = slide.closest('.carousel');
@@ -90,10 +90,8 @@ function createSlide(row, slideIndex, carouselId) {
   return slide;
 }
 
-let carouselId = 0;
 export default async function decorate(block) {
-  carouselId += 1;
-  block.setAttribute('id', `carousel-${carouselId}`);
+  block.id = getBlockId('carousel');
   const rows = block.querySelectorAll(':scope > div');
   const isSingleSlide = rows.length < 2;
 
@@ -129,7 +127,7 @@ export default async function decorate(block) {
   }
 
   rows.forEach((row, idx) => {
-    const slide = createSlide(row, idx, carouselId);
+    const slide = createSlide(row, idx);
     moveInstrumentation(row, slide);
     slidesWrapper.append(slide);
 

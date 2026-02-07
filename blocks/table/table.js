@@ -4,13 +4,14 @@
  * https://www.hlx.live/developer/block-collection/table
  */
 
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 /**
  *
  * @param {Element} block
  */
 export default async function decorate(block) {
+  block.id = getBlockId('table');
   const table = document.createElement('table');
   const thead = document.createElement('thead');
   const tbody = document.createElement('tbody');

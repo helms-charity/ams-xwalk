@@ -1,4 +1,4 @@
-import { getBlockId } from '../../scripts/scripts.js';
+import { getBlockId } from '../../scripts/utils.js';
 
 export default function decorate(block) {
   block.id = getBlockId('columns');
