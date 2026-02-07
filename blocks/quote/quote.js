@@ -1,4 +1,7 @@
+import { getBlockId } from '../../scripts/utils.js';
+
 export default async function decorate(block) {
+  block.id = getBlockId('quote');
   const [quotation, attribution] = [...block.children].map((c) => c.firstElementChild);
   const blockquote = document.createElement('blockquote');
   // decorate quotation

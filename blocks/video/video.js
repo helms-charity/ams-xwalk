@@ -4,6 +4,8 @@
  * https://www.hlx.live/developer/block-collection/video
  */
 
+import { getBlockId } from '../../scripts/utils.js';
+
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function embedYoutube(url, autoplay, background) {
@@ -107,6 +109,7 @@ const loadVideoEmbed = (block, link, autoplay, background) => {
 };
 
 export default async function decorate(block) {
+  block.id = getBlockId('video');
   const placeholder = block.querySelector('picture');
   const link = block.querySelector('a').href;
   block.textContent = '';

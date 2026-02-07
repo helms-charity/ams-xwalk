@@ -1,8 +1,9 @@
 // eslint-disable-next-line import/no-unresolved
 import { toClassName } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 export default async function decorate(block) {
+  block.id = getBlockId('tabs');
   // build tablist
   const tablist = document.createElement('div');
   tablist.className = 'tabs-list';
@@ -16,7 +17,9 @@ export default async function decorate(block) {
     // decorate tabpanel
     const tabpanel = block.children[i];
     tabpanel.className = 'tabs-panel';
-    tabpanel.id = `tabpanel-${id}`;
+    Object.assign(tabpanel, {
+      id: `${block.id}_tabPane_${i}`,
+    });
     tabpanel.setAttribute('aria-hidden', !!i);
     tabpanel.setAttribute('aria-labelledby', `tab-${id}`);
     tabpanel.setAttribute('role', 'tabpanel');
@@ -24,12 +27,14 @@ export default async function decorate(block) {
     // build tab button
     const button = document.createElement('button');
     button.className = 'tabs-tab';
-    button.id = `tab-${id}`;
+    Object.assign(button, {
+      id: `${block.id}_tab_${i}`,
+    });
 
     moveInstrumentation(tab.parentElement, tabpanel.lastElementChild);
     button.innerHTML = tab.innerHTML;
 
-    button.setAttribute('aria-controls', `tabpanel-${id}`);
+    button.setAttribute('aria-controls', tabpanel.id);
     button.setAttribute('aria-selected', !i);
     button.setAttribute('role', 'tab');
     button.setAttribute('type', 'button');

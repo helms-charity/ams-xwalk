@@ -1,8 +1,9 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 export default function decorate(block) {
   /* change to ul, li */
+  block.id = getBlockId('cards');
   const ul = document.createElement('ul');
   [...block.children].forEach((row) => {
     const li = document.createElement('li');

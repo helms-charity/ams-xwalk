@@ -1,4 +1,7 @@
+import { getBlockId } from '../../scripts/utils.js';
+
 export default function decorate(block) {
+  block.id = getBlockId('columns');
   const cols = [...block.firstElementChild.children];
   block.classList.add(`columns-${cols.length}-cols`);
 

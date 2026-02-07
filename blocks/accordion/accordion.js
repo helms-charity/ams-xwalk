@@ -4,9 +4,10 @@
  * https://www.hlx.live/developer/block-collection/accordion
  */
 
-import { moveInstrumentation } from '../../scripts/scripts.js';
+import { moveInstrumentation, getBlockId } from '../../scripts/utils.js';
 
 export default function decorate(block) {
+  block.id = getBlockId('accordion');
   [...block.children].forEach((row) => {
     // decorate accordion item label
     const label = row.children[0];
